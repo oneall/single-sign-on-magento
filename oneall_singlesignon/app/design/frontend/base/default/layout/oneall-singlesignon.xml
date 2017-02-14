@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<customer_logged_out>
+		<reference name="head">
+			<block type="core/template" name="oneall.sociallogin.library" template="oneall/sociallogin/library.phtml" />
+		</reference>
+	</customer_logged_out>		
+	<customer_logged_in>
+		<reference name="head">
+			<block type="core/template" name="oneall.sociallogin.library" template="oneall/sociallogin/library.phtml" />
+		</reference>
+	</customer_logged_in>	
+</layout>

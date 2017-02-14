@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<package>
+	<name>OneAll_SingleSignOn</name>
+	<version>1.0.0</version>
+	<stability>stable</stability>
+	<license>GNU/GPL 2 or later</license>
+	<channel>community</channel>
+	<extends />
+	<summary>Social Login allows your customers to login and register with
+		30+ Social Networks.</summary>
+	<description>Social Login for Magento is a professional extension that
+		allows your visitors to login and register with social networks like
+		for example Twitter, Facebook, LinkedIn and PayPal.
+		It increases your conversion rate and sales by simplifying the registration
+		process and provides permission-based user data retrieved from the social network profiles.
+	</description>
+	<notes>A documentation is available here: http://docs.oneall.com/plugins/guide/social-login-magento/</notes>
+	<authors>
+		<author>
+			<name>OneAll LLC</name>
+			<user>OneAll</user>
+			<email>support@oneall.com</email>
+		</author>
+	</authors>
+	<date>2014-12-16</date>
+	<time>10:48:42</time>
+	<contents>
+		<target name="magecommunity">
+			<dir name="OneAll">
+				<dir name="SingleSignOn">
+					<dir name="Block">
+						<dir name="Adminhtml">
+							<dir name="System">
+								<dir name="Config">
+									<dir name="Fieldset">
+										<file name="General.php" hash="e5256ba73e04a09ab90f4a39916427e0" />
+									</dir>
+								</dir>
+							</dir>
+						</dir>
+						<file name="Login.php" hash="d2d7dbe46b407d8cc3dc369eca98a90a" />
+					</dir>
+					<dir name="Helper">
+						<file name="Data.php" hash="191fb1b0c70ac7ad0502581d78ac68bf" />
+					</dir>
+					<dir name="Model">
+						<file name="Apiautodetect.php" hash="fe32b304b9a3e15e45099328bf29bf31" />
+						<file name="Apiconnectionhandler.php" hash="ec60111e5d8bfc1609d83f8532d6444f" />
+						<file name="Apiconnectionport.php" hash="4120ddc8b175d91f2d3cb0a57488876b" />
+						<file name="Apiverify.php" hash="98a6d6a98e096ab53cadd4cc30656de2" />
+						<file name="Session.php" hash="1f8fe3c8c52aa1a7d91e241aab5dc202" />
+						<dir name="Mysql4">
+							<dir name="Session">
+								<file name="Collection.php" hash="420f9e47f1a2429f9627e93b338b816d" />
+							</dir>
+							<file name="Entity.php" hash="b2abd06f18048fe564c2b17cf30aed49" />
+						</dir>		
+						<file name="Subdomain.php" hash="457ce6f3e41fe6eda7943270a07f250a" />
+					</dir>
+					<dir name="controllers">
+						<file name="AjaxController.php" hash="fc561a0262bdeb73de4c535b4030ffda" />
+					</dir>
+					<dir name="etc">
+						<file name="adminhtml.xml" hash="b2b2205da48b85a4002c84464a3c7555" />
+						<file name="config.xml" hash="be0262e735e86b466fab9734f85ae5e7" />
+						<file name="system.xml" hash="d2291d62cc6cc9a252a3f2833e76a130" />
+					</dir>
+					<dir name="sql">
+						<dir name="oneall_singlesignon_setup">
+							<file name="mysql4-install-1.1.0.php" hash="e51670ff053f5391e6626ac9dd22769b" />
+						</dir>
+					</dir>
+				</dir>
+			</dir>
+		</target>
+		<target name="magedesign">
+			<dir name="frontend">
+				<dir name="base">
+					<dir name="default">
+						<dir name="layout">
+							<file name="oneall-singlesignon.xml" hash="741e14c02b790d4ab7b06c089dbb6973" />
+						</dir>
+						<dir name="template">
+							<dir name="oneall">
+								<dir name="singlesignon">
+									<file name="library.phtml" hash="81d9683ae5e0d67c4fba204e770fa25d" />
+								</dir>
+							</dir>
+						</dir>
+					</dir>
+				</dir>
+			</dir>
+		</target>
+		<target name="mageetc">
+			<dir name="modules">
+				<file name="OneAll_SingleSignOn.xml" hash="a50d33654c5b3d7f12f933d3f79ccca1" />
+			</dir>
+		</target>
+	</contents>
+	<compatible />
+	<dependencies>
+		<required>
+			<php>
+				<min>5.1.0</min>
+				<max>6.0.0</max>
+			</php>
+			<extension>
+				<name>curl</name>
+				<min></min>
+				<max></max>
+			</extension>
+		</required>
+	</dependencies>
+</package>
