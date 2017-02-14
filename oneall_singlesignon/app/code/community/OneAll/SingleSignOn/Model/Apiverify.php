@@ -83,7 +83,7 @@ class OneAll_SingleSignOn_Model_Apiverify
 
 		var result_container = document.getElementById('oneall_singlesignon_api_verify_result');
 		result_container.innerHTML = 'Loading ...';
-		verify_ajax('{$base_url}social/ajax/verify?api_key=' + api_key + '&api_subdomain=' + api_subdomain + '&api_secret='+  api_secret  +'&api_connection_handler='+  api_connection_handler +'&api_connection_port=' + api_connection_port, verify_complete);
+		verify_ajax('{$base_url}oneall_singlesignon_ajax/ajax/verify?api_key=' + api_key + '&api_subdomain=' + api_subdomain + '&api_secret='+  api_secret  +'&api_connection_handler='+  api_connection_handler +'&api_connection_port=' + api_connection_port, verify_complete);
 	}
 
 	var verify_complete = function (text)

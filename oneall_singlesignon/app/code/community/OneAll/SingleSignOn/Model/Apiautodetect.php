@@ -52,7 +52,7 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 	{
 		var div = document.getElementById('oneall_singlesignon_api_test_result');
 		div.innerHTML = 'Loading ...';
-		autodetect_ajax('{$base_url}social/ajax', autodetect_complete);
+		autodetect_ajax('{$base_url}oneall_singlesignon_ajax/ajax', autodetect_complete);
 	}
 
 	var autodetect_ajax = function (url, callback_function)

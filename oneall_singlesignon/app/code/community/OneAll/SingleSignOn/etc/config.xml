@@ -7,13 +7,13 @@
 	</modules>
 	<frontend>
 		<routers>
-			<oneallsociallogin>
+			<oneall_singlesignon>
 				<use>standard</use>
 				<args>
 					<module>OneAll_SingleSignOn</module>
-					<frontName>social</frontName>
+					<frontName>oneall_singlesignon_ajax</frontName>
 				</args>
-			</oneallsociallogin>
+			</oneall_singlesignon>
 		</routers>
 		<layout>
 			<updates>

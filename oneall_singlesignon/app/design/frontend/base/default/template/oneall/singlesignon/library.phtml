@@ -1,7 +1,7 @@
 <?php
 /**
- * @package   	OneAll Social Login
- * @copyright 	Copyright 2014-2016 http://www.oneall.com - All rights reserved
+ * @package   	OneAll Single Sign-On
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com/
  * @license   	GNU/GPL 2 or later
  *
  * This program is free software; you can redistribute it and/or
@@ -29,15 +29,21 @@ $oneall_site_subdomain = Mage::getStoreConfig ('oneall_singlesignon/general/subd
 // Include Library
 if (! empty ($oneall_site_subdomain))
 {
-	?>
-		<!-- OneAll.com / Single Sign-On for Magento -->
-		<script type="text/javascript">
-			var oa = document.createElement('script');
-			oa.type = 'text/javascript'; oa.async = true;
-			oa.src = '//<?php echo $oneall_site_subdomain; ?>.api.oneall.com/socialize/library.js'
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(oa, s);
-		</script>
+?>
+<!-- OneAll.com / Single Sign-On for Magento -->
+<script type="text/javascript">
+//<![CDATA[
+	var have_oa_lib = (have_oa_lib || false);
+	(function(){if (!have_oa_lib){
+		var lib = document.createElement('script');
+		lib.type = 'text/javascript'; lib.async = true;
+		lib.src = '//<?php echo $oneall_site_subdomain; ?>.api.oneall.com/socialize/library.js'
+		var node = document.getElementsByTagName('script')[0];
+		node.parentNode.insertBefore(lib, node); 
+		have_oa_lib = true;
+	}})();
+//]]>
+</script>
 <?php
 }
 ?>

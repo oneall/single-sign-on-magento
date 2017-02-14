@@ -38,7 +38,6 @@
 								</dir>
 							</dir>
 						</dir>
-						<file name="Login.php" hash="d2d7dbe46b407d8cc3dc369eca98a90a" />
 					</dir>
 					<dir name="Helper">
 						<file name="Data.php" hash="191fb1b0c70ac7ad0502581d78ac68bf" />
@@ -53,7 +52,7 @@
 							<dir name="Session">
 								<file name="Collection.php" hash="420f9e47f1a2429f9627e93b338b816d" />
 							</dir>
-							<file name="Entity.php" hash="b2abd06f18048fe564c2b17cf30aed49" />
+							<file name="Session.php" hash="b2abd06f18048fe564c2b17cf30aed49" />
 						</dir>		
 						<file name="Subdomain.php" hash="457ce6f3e41fe6eda7943270a07f250a" />
 					</dir>
