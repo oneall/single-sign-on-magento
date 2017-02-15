@@ -23,12 +23,23 @@
  *
  */
 
-// Single Sign-On Session Model
-class OneAll_SingleSignOn_Model_Session extends Mage_Core_Model_Abstract
-{
-	protected function _construct ()
-	{
-		parent::_construct();
-		$this->_init ('oneall_singlesignon/session');
-	}
-}
+// Start Installer
+$installer = $this;
+$installer->startSetup ();
+
+mail('cschlesser@oneall.com', 'Installer 1', 'Starting');
+
+// Table to store the customer's sso_session_token
+$sql = "CREATE TABLE `" . $this->getTable ('oneall_singlesignon/session') . "` (`customer_id` int(11) UNSIGNED NOT NULL, `sso_session_token` char(36) NOT NULL, PRIMARY KEY (`customer_id`)) ENGINE=InnoDB;";
+$installer->run ($sql);
+
+mail('cschlesser@oneall.com', 'Installer 2', $sql);
+
+// Table to store the customer's user_token
+$sql = "CREATE TABLE `" . $this->getTable ('oneall_singlesignon/user') . "` (`customer_id` int(11) UNSIGNED NOT NULL, `identity_token` char(36) NOT NULL, PRIMARY KEY (`customer_id`)) ENGINE=InnoDB;";
+$installer->run ($sql);
+
+mail('cschlesser@oneall.com', 'Installer 3', $sql);
+
+// End Installer
+$installer->endSetup ();

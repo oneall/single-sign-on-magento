@@ -29,45 +29,68 @@ $oneall_site_subdomain = Mage::getStoreConfig ('oneall_singlesignon/general/subd
 // Include Library
 if (! empty ($oneall_site_subdomain))
 {
-?>
-<!-- OneAll.com / Single Sign-On for Magento -->
-<script type="text/javascript">
-//<![CDATA[
+	// Customer is logged in
+	if(Mage::getSingleton('customer/session')->isLoggedIn())
+	{
+		// Logged in
+		$is_logged_in = true;
+	
+		// Read Customer
+		$customer = Mage::getSingleton('customer/session')->getCustomer();
+	
+		// Check if we sso_session_token for this customer
+		$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getEntityId(), 'customer_id');
+		$sso_session_token = $session->sso_session_token;
+	}
+	// Customer is not logged in
+	else
+	{
+		// Not logged in
+		$is_logged_in = false;
+	}
+	
+	// Library
+	$library_js = <<<HEREDOC
 	var have_oa_lib = (have_oa_lib || false);
 	(function(){if (!have_oa_lib){
 		var lib = document.createElement('script');
 		lib.type = 'text/javascript'; lib.async = true;
-		lib.src = '//<?php echo $oneall_site_subdomain; ?>.api.oneall.com/socialize/library.js'
+		lib.src = '//$oneall_site_subdomain.api.oneall.com/socialize/library.js'
 		var node = document.getElementsByTagName('script')[0];
-		node.parentNode.insertBefore(lib, node); 
+		node.parentNode.insertBefore(lib, node);
 		have_oa_lib = true;
 	}})();
-//]]>
-</script>
-<?php
-}
-?>
 
-
-<?php
-if (isset ($_GET ['oneall']))
-{
-	$pageaction = Mage::app ()->getFrontController ()->getAction ()->getFullActionName ();
-
-	if ($_GET ['oneall'] == 'login')
+HEREDOC;
+	
+	if ($is_logged_in)
 	{
-		// is user is come from checkout...
-		if ($pageaction == 'checkout_onepage_index')
+		if ( ! empty ($sso_session_token))
 		{
-
-			$link = Mage::getUrl ('checkout/onepage');
-			echo '<meta http-equiv="refresh" content="0; url=' . $link . ' "  />';
-			exit ();
+?>
+<!-- OneAll.com / Single Sign-On for Magento -->
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $library_js; ?>
+	var _oneall = (_oneall || []);			
+	_oneall.push(['single_sign_on', 'do_register_sso_session', '<?php echo $sso_session_token; ?>']);
+ //]]>
+</script>
+<?php  
 		}
-
-		$link = Mage::getUrl ('customer/account');
-		echo '<meta http-equiv="refresh" content="0; url=' . $link . ' "  />';
-		exit ();
+	}
+	else
+	{
+?>
+<!-- OneAll.com / Single Sign-On for Magento -->
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $library_js; ?>
+	var _oneall = (_oneall || []);
+	_oneall.push(['single_sign_on', 'set_callback_uri', (window.location.href + ((window.location.href.split('?')[1] ? '&amp;' : '?') + 'oneall=sso'))]);
+	_oneall.push(['single_sign_on', 'do_check_for_sso_session']);
+ //]]>
+</script>
+<?php 	
 	}
 }
-?>

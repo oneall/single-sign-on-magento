@@ -24,6 +24,27 @@
 		</layout>
 	</frontend>	
 	<global>
+		<events>
+			<customer_login>
+				<observers>
+		 			<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customerLogin</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+		 		</observers>
+			</customer_login>
+			<customer_logout>
+				<observers>
+		 			<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customerLogout</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+		 		</observers>
+			</customer_logout>
+		</events>
+		
 		<blocks>
 			<oneall_singlesignon>
 				<class>OneAll_SingleSignOn_Block</class>
@@ -32,16 +53,19 @@
 		<models>
 			<oneall_singlesignon>
 				<class>OneAll_SingleSignOn_Model</class>
-				<resourceModel>oneall_singlesignon_mysql4</resourceModel>
+				<resourceModel>oneall_singlesignon_resource</resourceModel>
 			</oneall_singlesignon>
-			<oneall_singlesignon_mysql4>
-				<class>OneAll_SingleSignOn_Model_Mysql4</class>
+			<oneall_singlesignon_resource>
+				<class>OneAll_SingleSignOn_Model_Resource</class>
 				<entities>
-					<entity>
-						<table>oneall_singlesignon_entity</table>
-					</entity>
+					<session>
+						<table>oneall_singlesignon_session</table>
+					</session>
+					<user>
+						<table>oneall_singlesignon_user</table>
+					</user>
 				</entities>
-			</oneall_singlesignon_mysql4>
+			</oneall_singlesignon_resource>
 		</models>
 		<resources>
 			<oneall_singlesignon_setup>
@@ -75,44 +99,6 @@
 				<handler>curl</handler>
 				<port>443</port>
 			</connection>
-			<settings>
-				<textsignup>Sign up with a social network</textsignup>
-				<textsignin>Sign in with a social network</textsignin>
-			</settings>
-			<services>
-				<amazon>setno</amazon>
-				<battlenet>setno</battlenet>
-				<blogger>setno</blogger>
-				<disqus>setno</disqus>
-				<draugiem>setno</draugiem>
-				<dribbble>setno</dribbble>
-				<facebook>setyes</facebook>
-				<foursquare>setno</foursquare>
-				<githubcom>setno</githubcom>
-				<google>setyes</google>
-				<instagram>setno</instagram>
-				<linkedin>setyes</linkedin>
-				<livejournal>setno</livejournal>
-				<mailru>setno</mailru>
-				<odnoklassniki>setno</odnoklassniki>
-				<openid>setno</openid>
-				<paypal>setno</paypal>
-				<pinterest>setno</pinterest>
-				<pixelpin>setno</pixelpin>
-				<reddit>setno</reddit>
-				<skyrockcom>setno</skyrockcom>
-				<stackexchange>setno</stackexchange>
-				<steam>setno</steam>
-				<twitch>setno</twitch>				
-				<twitter>setyes</twitter>
-				<vimeo>setno</vimeo>
-				<vkontakte>setno</vkontakte>
-				<windowslive>setno</windowslive>
-				<wordpress>setno</wordpress>
-				<xing>setno</xing>
-				<yahoo>setno</yahoo>
-				<youtube>setno</youtube>
-			</services>			
 		</oneall_singlesignon>
 	</default>
 </config> 

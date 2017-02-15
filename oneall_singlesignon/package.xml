@@ -48,13 +48,19 @@
 						<file name="Apiconnectionport.php" hash="4120ddc8b175d91f2d3cb0a57488876b" />
 						<file name="Apiverify.php" hash="98a6d6a98e096ab53cadd4cc30656de2" />
 						<file name="Session.php" hash="1f8fe3c8c52aa1a7d91e241aab5dc202" />
-						<dir name="Mysql4">
+						<file name="User.php" hash="1f3567c8c52aa1a7d91e241aab5dc202" />
+						<file name="Observer.php" hash="222fe3c8c52aa1a7d91e241aab5dc202" />
+						<file name="Subdomain.php" hash="457ce6f3e41fe6eda7943270a07f250a" />
+						<dir name="Resource">
+							<file name="Session.php" hash="b2abd06f18048fe564c2b17cf30aed49" />
+							<file name="User.php" hash="a5abd06f18048fe564c2b17cf30aed49" />
 							<dir name="Session">
 								<file name="Collection.php" hash="420f9e47f1a2429f9627e93b338b816d" />
+							</dir>							
+							<dir name="User">
+								<file name="Collection.php" hash="1ad49e47f1a2429f9627e93b338b816d" />
 							</dir>
-							<file name="Session.php" hash="b2abd06f18048fe564c2b17cf30aed49" />
-						</dir>		
-						<file name="Subdomain.php" hash="457ce6f3e41fe6eda7943270a07f250a" />
+						</dir>
 					</dir>
 					<dir name="controllers">
 						<file name="AjaxController.php" hash="fc561a0262bdeb73de4c535b4030ffda" />
@@ -66,7 +72,7 @@
 					</dir>
 					<dir name="sql">
 						<dir name="oneall_singlesignon_setup">
-							<file name="mysql4-install-1.1.0.php" hash="e51670ff053f5391e6626ac9dd22769b" />
+							<file name="resource-install-1.0.0.php" hash="123670ff053f5391e6626ac9dd22769b" />
 						</dir>
 					</dir>
 				</dir>
@@ -101,7 +107,7 @@
 		<required>
 			<php>
 				<min>5.1.0</min>
-				<max>6.0.0</max>
+				<max>7.0.0</max>
 			</php>
 			<extension>
 				<name>curl</name>

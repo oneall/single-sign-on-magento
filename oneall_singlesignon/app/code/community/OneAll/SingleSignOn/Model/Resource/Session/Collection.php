@@ -1,6 +1,4 @@
 <?php
-// SSO OK
-
 /**
  * @package   	OneAll Single Sign-On
  * @copyright 	Copyright 2011-2017 http://www.oneall.com/
@@ -26,7 +24,7 @@
  */
 
 // Single Sign-On Session Table
-class OneAll_SingleSignOn_Model_Mysql4_Session_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+class OneAll_SingleSignOn_Model_Resource_Session_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
 	public function _construct ()
 	{

@@ -83,7 +83,284 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 
 		return false;
 	}
+	
+	/**
+	 * Returns the API Settings
+	 */
+	public function get_api_settings ()
+	{		
+		$settings = array ();
+		$settings ['connection_handler'] = (Mage::getStoreConfig ('oneall_singlesignon/connection/handler') == 'fsockopen' ? 'fsockopen' : 'curl');
+		$settings ['connection_port'] = (Mage::getStoreConfig ('oneall_singlesignon/connection/port') == 80 ? 80 : 443);
+		$settings ['connection_protocol'] = ($settings ['connection_port'] == 80 ? 'http' : 'https'); 
+		$settings ['subdomain'] = trim (strval(Mage::getStoreConfig ('oneall_singlesignon/general/subdomain')));
+		$settings ['key'] = trim (strval(Mage::getStoreConfig ('oneall_singlesignon/general/key')));
+		$settings ['secret'] = trim (strval(Mage::getStoreConfig ('oneall_singlesignon/general/secret')));
+		$settings ['base_url'] = ($settings['connection_protocol'] . '://' . $settings['subdomain'] . '.api.oneall.loc');
+		$settings ['credentials'] = array (
+			'api_key' => $settings ['key'],
+			'api_secret' => $settings ['secret']
+		);
+		
+		return $settings;
+	}	
+	
+	
+	/**
+	 * Starts a new Single Sign-On session for the given identity 
+	 */
+	public function start_session_for_identity_token ($identity_token)
+	{
+		// The key of the new Single Sign-On session
+		$sso_session_token = null;
+		
+		// Read settings
+		$api_settings = $this->get_api_settings();
+		
+		// We cannot make a connection without a subdomain
+		if (! empty ($api_settings['subdomain']))
+		{
+			// We need the identity_token to create the session
+			if ( ! empty ($identity_token))
+			{
+				//////////////////////////////////////////////////////////////////////////////////////////////////
+				// Start a new Single Sign-On Session
+				//////////////////////////////////////////////////////////////////////////////////////////////////
+					
+				// API Endpoint: http://docs.oneall.com/api/resources/sso/identity/start-session/
+				$api_resource_url = $api_settings['base_url'] . '/sso/sessions/identities/'.$identity_token.'.json';
+		
+				// API Options
+				$api_options = array (
+					'api_key' => $api_settings['key'],
+					'api_secret' => $api_settings['secret'],
+				);
+				
+				// Create Session
+				$result = $this->do_api_request ($api_settings ['connection_handler'], $api_resource_url, 'PUT', $api_options);
+			
+				// Check result. 201 Returned !!!
+				if (is_object ($result) && property_exists ($result, 'http_code') && $result->http_code == 201 && property_exists ($result, 'http_data'))
+				{
+					// Decode result
+					$decoded_result = @json_decode ($result->http_data);
 
+					// Check result
+					if (is_object ($decoded_result) && isset ($decoded_result->response->result->data->sso_session))
+					{
+						// The key of the new Single Sign-On session
+						$sso_session_token = $decoded_result->response->result->data->sso_session->sso_session_token;
+					}
+				}
+				
+			}		
+		}
+		
+		// Done
+		return $sso_session_token;
+	}
+	
+	
+	/**
+	 * Stores a customer in the cloud storage
+	 */
+	public function add_customer_to_cloud_storage ($customer)
+	{
+		// The key of the user's identity stored in the cloud storage
+		$identity_token = null;
+		
+		// Read settings
+		$api_settings = $this->get_api_settings();
+
+		// We cannot make a connection without a subdomain
+		if (! empty ($api_settings['subdomain']))
+		{
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			// First make sure that we don't create duplicate users
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			// API Endpoint: http://docs.oneall.com/api/resources/storage/users/lookup-user/
+			$api_resource_url = $api_settings['base_url'] . '/storage/users/user/lookup.json';
+			
+			// API Options
+			$api_options = array (
+				'api_key' => $api_settings['key'],
+				'api_secret' => $api_settings['secret'],
+				'api_data' => json_encode (array(
+					'request' => array(
+						'user' => array(
+							'login' => $customer->getEmail(),
+						) 
+					) 
+				))
+			);	
+			
+			// User Lookup
+			$result = $this->do_api_request ($api_settings ['connection_handler'], $api_resource_url, 'POST', $api_options);
+			
+			// Check result
+			if (is_object ($result) and property_exists ($result, 'http_code') and $result->http_code == 200 and property_exists ($result, 'http_data'))
+			{
+				// Decode result
+				$decoded_result = @json_decode ($result->http_data);
+
+				// Check result
+				if (is_object ($decoded_result) and isset ($decoded_result->response->result->data->user))
+				{
+					// The key of the user's identity stored in the cloud storage
+					$identity_token = $decoded_result->response->result->data->user->identity->identity_token;
+				}
+			}
+			
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			// If we have no identity_token, then a new identity needs to be added
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			if (empty ($user_token))
+			{			
+				// API Endpoint: http://docs.oneall.com/api/resources/storage/users/create-user/
+				$api_resource_url = $api_settings['base_url'] . '/storage/users.json';
+	
+				// API Options
+				$api_options = array (
+					'api_key' => $api_settings['key'],
+					'api_secret' => $api_settings['secret'],
+					'api_data' => json_encode (array(
+						'request' => array(
+							'user' => array(
+								'login' => $customer->getEmail(),
+								'password' => $customer->getPasswordHash(),
+								//'externalid' => $customer->getEntityId(),
+								'identity' => array(
+									'name' => array(
+										'honorificPrefix' => $customer->getPrefix(),
+										'givenName' => $customer->getFirstname(),
+										'middleName'  => $customer->getMiddlename(),
+										'familyName' => $customer->getLastname(), 
+										'honorificSuffix' => $customer->getSuffix()
+									) 
+								) 
+							) 
+						) 
+					))
+				);	
+							
+				// Add User
+				$result = $this->do_api_request ($api_settings ['connection_handler'], $api_resource_url, 'POST', $api_options);
+			
+				// Check result
+				if (is_object ($result) and property_exists ($result, 'http_code') and $result->http_code == 200 and property_exists ($result, 'http_data'))
+				{
+					// Decode result
+					$decoded_result = @json_decode ($result->http_data);
+
+					// Check result
+					if (is_object ($decoded_result) and isset ($decoded_result->response->result->data->user))
+					{
+						// The key of the user's identity stored in the cloud storage
+						$identity_token = $decoded_result->response->result->data->user->identity->identity_token;
+					}
+				}
+			}	
+		}
+		
+		// Done
+		return $identity_token;
+	}
+	
+	/**
+	 * Removes a new single sign-on session for the given customer
+	 */
+	public function remove_session_for_customer ($customer)
+	{
+		// Read settings
+		$api_settings = $this->get_api_settings();
+		
+		// We cannot make a connection without a subdomain
+		if (empty ($api_settings['subdomain']))
+		{
+			// Check if we have a session for this customer
+			$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId(), 'customer_id');
+			$sso_session_token = $session->sso_session_token;
+							
+			// Generate Session Token 
+			
+			REPLACE BY REMOVE
+			
+			$sso_session_token = $this->start_session_for_identity_token ($identity_token);
+		
+			// Save Token
+				if ( ! empty ($sso_session_token))
+				{
+					HERE TOO
+					// Save Token
+					$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId(), 'customer_id');
+					$session->setData ('customer_id', $customer->getId ());
+					$session->setData ('sso_session_token', $sso_session_token);
+					$session->save ();
+				}
+		
+			}
+		}
+	}
+	
+	
+	/**
+	 * Opens a new single sign-on session for the given customer
+	 */
+	public function create_session_for_customer ($customer)
+	{
+		// The key of the new session
+		$sso_session_token = null;
+		
+		// Read settings
+		$api_settings = $this->get_api_settings();
+		
+		// We cannot make a connection without a subdomain
+		if (empty ($api_settings['subdomain']))
+		{
+			// Check if we have already created an identity for this customer
+			$user = Mage::getModel ('oneall_singlesignon/user')->load ($customer->getId(), 'customer_id');
+			$identity_token = $user->identity_token;
+			
+			// No user_token for this customer found
+			if (empty ($identity_token))
+			{
+				// Generate Identity Token
+				$identity_token = $this->add_customer_to_cloud_storage ($customer);
+				
+				// Save Token
+				if ( ! empty ($identity_token))
+				{
+					$user = Mage::getModel ('oneall_singlesignon/user');					
+					$user->setData ('customer_id', $customer->getId ());
+					$user->setData ('identity_token', $identity_token);
+					$user->save ();
+				}				
+			}
+
+			// Start Session
+			if ( ! empty ($identity_token))
+			{
+				// Generate Session Token
+				$sso_session_token = $this->start_session_for_identity_token ($identity_token);
+				
+				// Save Token
+				if ( ! empty ($sso_session_token))
+				{
+					// Save Token
+					$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId(), 'customer_id');	
+					$session->setData ('customer_id', $customer->getId ());
+					$session->setData ('sso_session_token', $sso_session_token);
+					$session->save ();
+				}
+				
+			}
+		}		
+		
+		// Created session
+		return $sso_session_token;
+	}
+	
 	/**
 	 * Handle the callback from OneAll.
 	 */
@@ -98,11 +375,11 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			// Read settings
 			$settings = array ();
-			$settings ['api_connection_handler'] = Mage::getStoreConfig ('oneall_sociallogin/connection/handler');
-			$settings ['api_connection_port'] = Mage::getStoreConfig ('oneall_sociallogin/connection/port');
-			$settings ['api_subdomain'] = Mage::getStoreConfig ('oneall_sociallogin/general/subdomain');
-			$settings ['api_key'] = Mage::getStoreConfig ('oneall_sociallogin/general/key');
-			$settings ['api_secret'] = Mage::getStoreConfig ('oneall_sociallogin/general/secret');
+			$settings ['api_connection_handler'] = Mage::getStoreConfig ('oneall_singlesignon/connection/handler');
+			$settings ['api_connection_port'] = Mage::getStoreConfig ('oneall_singlesignon/connection/port');
+			$settings ['api_subdomain'] = Mage::getStoreConfig ('oneall_singlesignon/general/subdomain');
+			$settings ['api_key'] = Mage::getStoreConfig ('oneall_singlesignon/general/key');
+			$settings ['api_secret'] = Mage::getStoreConfig ('oneall_singlesignon/general/secret');
 
 			// API Settings
 			$api_connection_handler = ((! empty ($settings ['api_connection_handler']) and $settings ['api_connection_handler'] == 'fsockopen') ? 'fsockopen' : 'curl');
@@ -142,7 +419,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						$identity_token = $data->user->identity->identity_token;
 
 						// Check if we have a user for this user_token.
-						$oneall_entity = Mage::getModel ('oneall_sociallogin/entity')->load ($user_token, 'user_token');
+						$oneall_entity = Mage::getModel ('oneall_singlesignon/entity')->load ($user_token, 'user_token');
 						$customer_id = $oneall_entity->customer_id;
 
 						// No user for this token, check if we have a user for this email.
@@ -247,7 +524,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 							$customer_id = $customer->getId ();
 							
 							// Save OneAll user_token.
-							$model = Mage::getModel ('oneall_sociallogin/entity');
+							$model = Mage::getModel ('oneall_singlesignon/entity');
 							$model->setData ('customer_id', $customer->getId ());
 							$model->setData ('user_token', $user_token);
 							$model->setData ('identity_token', $identity_token);
@@ -283,10 +560,10 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						else
 						{
 							// Check if we have a user for this user_token.
-							if (strlen (Mage::getModel ('oneall_sociallogin/entity')->load ($user_token, 'user_token')->customer_id) == 0)
+							if (strlen (Mage::getModel ('oneall_singlesignon/entity')->load ($user_token, 'user_token')->customer_id) == 0)
 							{
 								// Save OneAll user_token.
-								$model = Mage::getModel ('oneall_sociallogin/entity');
+								$model = Mage::getModel ('oneall_singlesignon/entity');
 								$model->setData ('customer_id', $customer_id);
 								$model->setData ('user_token', $user_token);
 								$model->setData ('identity_token', $identity_token);
@@ -333,17 +610,17 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Send an API request by using the given handler
 	 */
-	public function do_api_request ($handler, $url, $options = array(), $timeout = 25)
+	public function do_api_request ($handler, $url, $method = 'GET', $options = array(), $timeout = 25)
 	{
 		// FSOCKOPEN
 		if ($handler == 'fsockopen')
 		{
-			return $this->do_fsockopen_request ($url, $options, $timeout);
+			return $this->do_fsockopen_request ($url, $method, $options, $timeout);
 		}
 		// CURL
 		else
 		{
-			return $this->do_curl_request ($url, $options, $timeout);
+			return $this->do_curl_request ($url, $method, $options, $timeout);
 		}
 	}
 
@@ -395,7 +672,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Send an fsockopen request.
 	 */
-	public function do_fsockopen_request ($url, $options = array(), $timeout = 15)
+	public function do_fsockopen_request ($url, $method = 'GET', $options = array(), $data = null, $timeout = 15)
 	{
 		// Store the result
 		$result = new stdClass ();
@@ -541,7 +818,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Send a CURL request.
 	 */
-	public function do_curl_request ($url, $options = array(), $timeout = 15)
+	public function do_curl_request ($url, $method = 'GET', $options = array(), $data = null, $timeout = 15)
 	{
 		// Store the result
 		$result = new stdClass ();
@@ -557,10 +834,36 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		curl_setopt ($curl, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt ($curl, CURLOPT_USERAGENT, self::OA_USER_AGENT);
 
-		// Basic AUTH?
+		// HTTP Method
+		switch (strtoupper ($method))
+		{
+			case 'DELETE':
+				curl_setopt ($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+			break;
+			
+			case 'PUT':
+				curl_setopt ($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+			break;
+
+			case 'POST':
+				curl_setopt ($curl, CURLOPT_POST, 1);
+			break;
+			
+			default:
+				curl_setopt ($curl, CURLOPT_HTTPGET, 1);
+			break;
+		}
+
+		// HTTP AUTH
 		if (isset ($options ['api_key']) and isset ($options ['api_secret']))
 		{
 			curl_setopt ($curl, CURLOPT_USERPWD, $options ['api_key'] . ":" . $options ['api_secret']);
+		}
+		
+		// POST Data
+		if (isset ($options ['api_data']))
+		{
+			curl_setopt ($curl, CURLOPT_POSTFIELDS, $options ['api_data']);			
 		}
 
 		// Make request

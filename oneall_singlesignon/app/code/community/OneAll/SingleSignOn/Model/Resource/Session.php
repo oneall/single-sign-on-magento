@@ -23,20 +23,12 @@
  *
  */
 
-
-$installer = $this;
-$installer->startSetup ();
-
-// Table structure
-$sql = "CREATE TABLE `".$this->getTable('oneall_singlesignon_session')."`(
-	`session_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`customer_id` int(11) UNSIGNED NOT NULL,
-	`identity_token` char(36) NOT NULL,
-	`session_token` char(36) NOT NULL,
-	PRIMARY KEY (`entity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1;";
-
-// Create table
-$installer->run ($sql);
-
-$installer->endSetup ();
+// Single Sign-On Session Table
+class OneAll_SingleSignOn_Model_Resource_Session extends Mage_Core_Model_Resource_Db_Abstract
+{
+	public function _construct ()
+	{
+		$this->_init ('oneall_singlesignon/session', 'customer_id');
+		$this->_isPkAutoIncrement = false;
+	}
+}

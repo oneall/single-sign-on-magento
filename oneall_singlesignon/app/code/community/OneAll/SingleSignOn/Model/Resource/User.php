@@ -23,12 +23,12 @@
  *
  */
 
-// Single Sign-On Session Model
-class OneAll_SingleSignOn_Model_Session extends Mage_Core_Model_Abstract
+// Single Sign-On User Table
+class OneAll_SingleSignOn_Model_Resource_User extends Mage_Core_Model_Resource_Db_Abstract
 {
-	protected function _construct ()
-	{
-		parent::_construct();
-		$this->_init ('oneall_singlesignon/session');
+	public function _construct ()
+	{		
+		$this->_init ('oneall_singlesignon/user', 'customer_id');
+		$this->_isPkAutoIncrement = false;
 	}
 }

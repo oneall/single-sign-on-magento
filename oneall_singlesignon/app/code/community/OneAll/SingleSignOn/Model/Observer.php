@@ -1,6 +1,4 @@
 <?php
-// SSO OK
-
 /**
  * @package   	OneAll Single Sign-On
  * @copyright 	Copyright 2011-2017 http://www.oneall.com/
@@ -25,11 +23,33 @@
  *
  */
 
-// Single Sign-On Session Table
-class OneAll_SingleSignOn_Model_Mysql4_Session extends Mage_Core_Model_Mysql4_Abstract
+// Single Sign-On Observer
+class OneAll_SingleSignOn_Model_Observer
 {
-	public function _construct ()
-	{
-		$this->_init ('oneall_singlesignon/session'", 'session_id');
-	}
+	// Fired af the login of a customer.
+	public function customerLogin($observer)
+    {
+    	// Load Helper
+    	$helper = Mage::helper ('oneall_singlesignon');
+    	
+    	// Load Customer
+        $customer = $observer->getCustomer();
+        
+        // Setup a new session for the customer
+        $helper->create_session_for_customer ($customer);
+    }
+    
+    // Fired af the logout of a customer.
+    public function customerLogout($observer)
+    {
+    	// Load Helper
+    	$helper = Mage::helper ('oneall_singlesignon');
+    	 
+    	// Load Customer
+    	$customer = $observer->getCustomer();
+    
+    	// Setup a new session for the customer
+    	$helper->remove_session_for_customer ($customer);
+    }
+    
 }
