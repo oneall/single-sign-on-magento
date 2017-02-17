@@ -1,6 +1,4 @@
 <?php
-// SSO OK
-
 /**
  * @package   	OneAll Single Sign-On
  * @copyright 	Copyright 2011-2017 http://www.oneall.com/

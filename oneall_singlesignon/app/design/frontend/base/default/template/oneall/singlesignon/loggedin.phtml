@@ -1,0 +1,74 @@
+<?php
+/**
+ * @package   	OneAll Single Sign-On
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com/
+ * @license   	GNU/GPL 2 or later
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ */
+
+// Encapsulate
+if (!function_exists ('oneall_singlesignon_run_loggedin'))
+{
+	function oneall_singlesignon_run_loggedin ()
+	{
+		// Read Settings
+		$settings = Mage::helper ('oneall_singlesignon')->get_settings ();
+		
+		// If it's empty the extension has not been setup yet
+		if (!empty ($settings ['subdomain']))
+		{
+			// Read Customer
+			$customer = Mage::getSingleton ('customer/session')->getCustomer ();
+			
+			// Check if we have a sso_session_token for this customer
+			$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId (), 'customer_id');
+			$sso_session_token = $session->sso_session_token;
+			
+			// Token Found
+			if (!empty ($sso_session_token))
+			{
+				// Build SSO JavaScript
+				$data = array();
+				$data [] = "<!-- OneAll.com / Single Sign-On for Magento -->";
+				$data [] = "<script type=\"text/javascript\">";
+				$data [] = "//<![CDATA[";
+				$data [] = " var have_oa_lib = (have_oa_lib || false);";
+				$data [] = " (function(){if (!have_oa_lib){";
+				$data [] = "  var lib = document.createElement('script');";
+				$data [] = "  lib.type = 'text/javascript'; lib.async = true;";
+				$data [] = "  lib.src = '//" . $settings ['base_url'] . "/socialize/library.js';";
+				$data [] = "  var node = document.getElementsByTagName('script')[0];";
+				$data [] = "  node.parentNode.insertBefore(lib, node); have_oa_lib = true;";
+				$data [] = " }})();";
+				$data [] = " var _oneall = (_oneall || []);";
+				$data [] = " _oneall.push(['single_sign_on', 'do_register_sso_session', '" . $sso_session_token . "']);";
+				$data [] = "//]]>";
+				$data [] = "</script>";
+				$data [] = "";
+				
+				// Add SSO JavaScript
+				echo implode ("\n", $data);
+			}
+		}
+	}
+}
+
+// Run
+oneall_singlesignon_run_loggedin ();

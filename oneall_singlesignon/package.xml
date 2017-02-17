@@ -48,6 +48,8 @@
 						<file name="Apiconnectionport.php" hash="4120ddc8b175d91f2d3cb0a57488876b" />
 						<file name="Apiverify.php" hash="98a6d6a98e096ab53cadd4cc30656de2" />
 						<file name="Session.php" hash="1f8fe3c8c52aa1a7d91e241aab5dc202" />
+						<file name="Sessionlifetime.php" hash="2adfe3c8c52aa1a7d91e241aab5dc202" />
+						<file name="Sessionsubrealm.php" hash="2a35e3c8c52aa1a7d91e241aab5dc202" />
 						<file name="User.php" hash="1f3567c8c52aa1a7d91e241aab5dc202" />
 						<file name="Observer.php" hash="222fe3c8c52aa1a7d91e241aab5dc202" />
 						<file name="Subdomain.php" hash="457ce6f3e41fe6eda7943270a07f250a" />
@@ -87,8 +89,9 @@
 						</dir>
 						<dir name="template">
 							<dir name="oneall">
-								<dir name="singlesignon">
-									<file name="library.phtml" hash="81d9683ae5e0d67c4fba204e770fa25d" />
+								<dir name="singlesignon">								
+									<file name="loggedin.phtml" hash="81d9683ae5e0d67c4fba204e770fa25d" />
+									<file name="loggedout.phtml" hash="1239683ae5e0d67c4fba204e770fa25d" />
 								</dir>
 							</dir>
 						</dir>

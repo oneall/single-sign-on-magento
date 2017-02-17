@@ -25,12 +25,21 @@
 	</frontend>	
 	<global>
 		<events>
+			<controller_action_layout_load_before>
+				<observers>
+		 			<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>layout_load_before</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+		 		</observers>
+			</controller_action_layout_load_before>
 			<customer_login>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
 		 				<type>singleton</type>
 						<class>OneAll_SingleSignOn_Model_Observer</class>	
-						<method>customerLogin</method>									
+						<method>customer_login</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
 			</customer_login>
@@ -39,7 +48,7 @@
 		 			<OneAll_SingleSignOn_Model_Observer>
 		 				<type>singleton</type>
 						<class>OneAll_SingleSignOn_Model_Observer</class>	
-						<method>customerLogout</method>									
+						<method>customer_logout</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
 			</customer_logout>
@@ -99,6 +108,9 @@
 				<handler>curl</handler>
 				<port>443</port>
 			</connection>
+			<settings>		
+				<sessionlifetime>86400</sessionlifetime>
+			</settings>
 		</oneall_singlesignon>
 	</default>
 </config> 

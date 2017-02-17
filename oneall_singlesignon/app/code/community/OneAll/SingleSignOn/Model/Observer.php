@@ -26,30 +26,43 @@
 // Single Sign-On Observer
 class OneAll_SingleSignOn_Model_Observer
 {
-	// Fired af the login of a customer.
-	public function customerLogin($observer)
-    {
-    	// Load Helper
-    	$helper = Mage::helper ('oneall_singlesignon');
-    	
-    	// Load Customer
-        $customer = $observer->getCustomer();
-        
-        // Setup a new session for the customer
-        $helper->create_session_for_customer ($customer);
-    }
-    
-    // Fired af the logout of a customer.
-    public function customerLogout($observer)
-    {
-    	// Load Helper
-    	$helper = Mage::helper ('oneall_singlesignon');
-    	 
-    	// Load Customer
-    	$customer = $observer->getCustomer();
-    
-    	// Setup a new session for the customer
-    	$helper->remove_session_for_customer ($customer);
-    }
-    
+	// Fired when the customer logs in.
+	public function customer_login ($observer)
+	{
+		// Load Customer
+		$customer = $observer->getCustomer ();
+		
+		// Setup a new SSO session for this customer
+		Mage::helper ('oneall_singlesignon')->create_session_for_customer ($customer);
+	}
+	
+	// Fired when the customer logs out.
+	public function customer_logout ($observer)
+	{
+		// Load Customer
+		$customer = $observer->getCustomer ();
+		
+		// Remove the SSO session of this customer
+		Mage::helper ('oneall_singlesignon')->remove_session_for_customer ($customer);
+	}
+	
+	// Fired before the layout is loaded.
+	public function layout_load_before ($observer)
+	{
+		// Where are we now?
+		$page_tag = Mage::app ()->getFrontController ()->getAction ()->getFullActionName ('_');
+		
+		// On the login page
+		if ($page_tag == 'customer_account_login')
+		{
+			// Do we have the email of the customer?
+			$sso_email = Mage::getSingleton ('core/session')->getSSOEmail ();
+			
+			// Display a message
+			if (!empty ($sso_email))
+			{
+				Mage::getSingleton ('core/session')->addSuccess (__ ('Please login with your email address <strong>%s</strong> in order to access your account.', $sso_email));
+			}
+		}
+	}
 }

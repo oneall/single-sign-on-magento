@@ -23,23 +23,20 @@
  *
  */
 
-// API Connection Subdomain
-class OneAll_SingleSignOn_Model_Subdomain extends Mage_Core_Model_Config_Data
+// SSO Session Sub Realm
+class OneAll_SingleSignOn_Model_Sessionsubrealm extends Mage_Core_Model_Config_Data
 {
 	// Save the value to the database.
 	public function save ()
 	{
-		// Read subdomain.
-		$subdomain = trim ($this->getValue ());
+		// Read Params
+		$params = Mage::app ()->getRequest ()->getParams ();
 		
-		// Full domain entered.
-		if (preg_match ("/([a-z0-9\-]+)\.api\.oneall\.com/i", $subdomain, $matches))
+		// Do not use a sub-realm without a top-realm
+		if (empty ($params ['groups'] ['settings'] ['fields'] ['sessiontoprealm'] ['value']))
 		{
-			$subdomain = $matches [1];
+			$this->setValue ('');
 		}
-		
-		// Use new value.
-		$this->setValue ($subdomain);
 		
 		// Save.
 		return parent::save ();

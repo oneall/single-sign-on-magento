@@ -1,0 +1,110 @@
+<?php
+/**
+ * @package   	OneAll Single Sign-On
+ * @copyright 	Copyright 2011-2017 http://www.oneall.com/
+ * @license   	GNU/GPL 2 or later
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,USA.
+ *
+ * The "GNU General Public License" (GPL) is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ */
+
+// Encapsulate
+if (!function_exists ('oneall_singlesignon_run_loggedout'))
+{
+	function oneall_singlesignon_run_loggedout ()
+	{
+		// Read Settings
+		$settings = Mage::helper ('oneall_singlesignon')->get_settings ();
+		
+		// If it's empty the extension has not been setup yet
+		if (!empty ($settings ['subdomain']))
+		{
+			// Check if we need to login by SSO
+			$status = Mage::helper ('oneall_singlesignon')->check_for_sso_login ();
+			
+			// Nothing has been done
+			switch (strtolower ($status->action))
+			{
+				// User found and logged in
+				case 'existing_user_login':
+							
+					// Remove these
+					Mage::getSingleton ('core/session')->unsSSOEmail ();
+					Mage::getSingleton ('core/session')->unsSSOGracePeriod ();
+						
+				break;
+				
+				// User found, but we cannot log him in
+				case 'existing_user_not_verified':
+					
+					// This value prevents SSO from re-trying to login the user.
+					Mage::getSingleton('core/session')->setSSOGracePeriod (time()+3600);
+					
+					// This value is a hint for the user, used in OneAll_SingleSignOn_Model_Observer
+					Mage::getSingleton('core/session')->setSSOEmail ($status->customer->getEmail());
+										
+					// Login Page URL
+					$login_page_url = Mage::getUrl('customer/account/login');
+					
+					// Redirect
+					Mage::app()->getFrontController()->getResponse()->setRedirect($login_page_url);
+					
+				break;
+
+				// Default
+				default:
+				
+					// Read data
+					$sso_grace_period = intval (Mage::getSingleton('core/session')->getSSOGracePeriod());
+					
+					// If this value is in the future, we should not try to login the user with SSO
+					if ($sso_grace_period < time ())
+					{
+						// Build SSO JavaScript
+						$data = array();
+						$data [] = "<!-- OneAll.com / Single Sign-On for Magento -->";
+						$data [] = "<script type=\"text/javascript\">";
+						$data [] = "//<![CDATA[";
+						$data [] = " var have_oa_lib = (have_oa_lib || false);";
+						$data [] = " (function(){if (!have_oa_lib){";
+						$data [] = "  var lib = document.createElement('script');";
+						$data [] = "  lib.type = 'text/javascript'; lib.async = true;";
+						$data [] = "  lib.src = '//" . $settings ['base_url'] . "/socialize/library.js';";
+						$data [] = "  var node = document.getElementsByTagName('script')[0];";
+						$data [] = "  node.parentNode.insertBefore(lib, node); have_oa_lib = true;";
+						$data [] = " }})();";
+						$data [] = " var _oneall = (_oneall || []);";
+						$data [] = " _oneall.push(['single_sign_on', 'set_callback_uri', window.location.href]);";
+						$data [] = " _oneall.push(['single_sign_on', 'do_check_for_sso_session']);";				
+						$data [] = "//]]>";
+						$data [] = "</script>";
+						$data [] = "";
+			
+						// Add SSO JavaScript
+						echo implode ("\n", $data);
+					}
+					
+				break;
+			}
+
+		}
+	}
+}
+
+// Run
+oneall_singlesignon_run_loggedout ();

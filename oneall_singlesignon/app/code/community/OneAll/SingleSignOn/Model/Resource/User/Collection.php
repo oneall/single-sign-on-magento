@@ -23,25 +23,11 @@
  *
  */
 
-// API Connection Subdomain
-class OneAll_SingleSignOn_Model_Subdomain extends Mage_Core_Model_Config_Data
+// Single Sign-On User Table
+class OneAll_SingleSignOn_Model_Resource_User_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
-	// Save the value to the database.
-	public function save ()
+	public function _construct ()
 	{
-		// Read subdomain.
-		$subdomain = trim ($this->getValue ());
-		
-		// Full domain entered.
-		if (preg_match ("/([a-z0-9\-]+)\.api\.oneall\.com/i", $subdomain, $matches))
-		{
-			$subdomain = $matches [1];
-		}
-		
-		// Use new value.
-		$this->setValue ($subdomain);
-		
-		// Save.
-		return parent::save ();
+		$this->_init ('oneall_singlesignon/user');
 	}
 }
