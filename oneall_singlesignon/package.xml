@@ -47,6 +47,9 @@
 						<file name="Apiconnectionhandler.php" hash="ec60111e5d8bfc1609d83f8532d6444f" />
 						<file name="Apiconnectionport.php" hash="4120ddc8b175d91f2d3cb0a57488876b" />
 						<file name="Apiverify.php" hash="98a6d6a98e096ab53cadd4cc30656de2" />
+						<file name="Autocreateaccounts.php" hash="12aaa6a98e096ab53cadd4cc30656de2" />
+						<file name="Autolinkaccounts.php" hash="12aa2aa456096ab53cadd4cc30656de2" />
+						<file name="Autolinkunverified.php" hash="ab122aa456096ab53cadd4cc30656de2" />
 						<file name="Session.php" hash="1f8fe3c8c52aa1a7d91e241aab5dc202" />
 						<file name="Sessionlifetime.php" hash="2adfe3c8c52aa1a7d91e241aab5dc202" />
 						<file name="Sessionsubrealm.php" hash="2a35e3c8c52aa1a7d91e241aab5dc202" />

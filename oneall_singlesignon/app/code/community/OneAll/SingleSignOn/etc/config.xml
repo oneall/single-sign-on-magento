@@ -25,6 +25,37 @@
 	</frontend>	
 	<global>
 		<events>
+		
+			<controller_action_predispatch_customer_account_loginpost>
+				<observers>
+					<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customer_before_login</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+				</observers>
+			</controller_action_predispatch_customer_account_loginpost>
+		
+			<customer_login>
+				<observers>
+		 			<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customer_after_login</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+		 		</observers>
+			</customer_login>
+			
+			<controller_action_predispatch_customer_account_editpost>
+				<observers>
+					<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customer_before_update_account</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+				</observers>
+			</controller_action_predispatch_customer_account_editpost>
+		
 			<controller_action_layout_load_before>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -34,15 +65,29 @@
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
 			</controller_action_layout_load_before>
-			<customer_login>
+			
+			<customer_save_after>			
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
 		 				<type>singleton</type>
 						<class>OneAll_SingleSignOn_Model_Observer</class>	
-						<method>customer_login</method>									
+						<method>customer_save_after</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
-			</customer_login>
+			</customer_save_after>
+			
+			<customer_register_success>
+				<observers>
+		 			<OneAll_SingleSignOn_Model_Observer>
+		 				<type>singleton</type>
+						<class>OneAll_SingleSignOn_Model_Observer</class>	
+						<method>customer_register</method>									
+		 			</OneAll_SingleSignOn_Model_Observer>
+		 		</observers>
+			</customer_register_success>
+						
+	
+			
 			<customer_logout>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -52,8 +97,8 @@
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
 			</customer_logout>
-		</events>
-		
+			
+		</events>		
 		<blocks>
 			<oneall_singlesignon>
 				<class>OneAll_SingleSignOn_Block</class>
@@ -110,7 +155,16 @@
 			</connection>
 			<settings>		
 				<sessionlifetime>86400</sessionlifetime>
+				<sessiontoprealm></sessiontoprealm>
+				<sessionsubrealm></sessionsubrealm>				
 			</settings>
+			<accounts_create>
+				<automatic>1</automatic>
+			</accounts_create>
+			<accounts_link>
+				<automatic>1</automatic>
+				<unverified>0</unverified>
+			</accounts_link>
 		</oneall_singlesignon>
 	</default>
 </config> 

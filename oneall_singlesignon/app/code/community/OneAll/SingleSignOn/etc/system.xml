@@ -17,8 +17,8 @@
 			<show_in_store>1</show_in_store>
 			<groups>
 				<documentation translate="label">
-					<label>Documentation</label>
-					<comment><![CDATA[The online documentation for this extension is available <a href="http://docs.oneall.com/plugins/guide/social-login-magento/" target="_blank">here</a>.]]></comment>
+					<label>Requirements</label>
+					<comment><![CDATA[Please note a OneAll site with a <a href="http://www.oneall.com/pricing-and-plans/#business-plans" target="_blank">Silver Plan</a> is required in order to use this extension. You only need one plan to enable SSO on all of your Magento shops.]]></comment>
 					<sort_order>1</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
@@ -69,7 +69,7 @@
 				</connection>
 				<general translate="label">
 					<label>API Settings</label>
-					<comment><![CDATA[<strong>You can create and view your API Credentials in your <a href="https://app.oneall.com/signin/" target="_blank">OneAll account</a>.</strong>]]></comment>
+					<comment><![CDATA[<p><strong>You can create and view your API Credentials in your <a href="https://app.oneall.com/signin/" target="_blank">OneAll account</a>.</strong></p><p>Please make sure to use the same settings in all the shops that you want to link together using SSO.</p>]]></comment>
 					<frontend_type>text</frontend_type>
 					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
 					<sort_order>3</sort_order>
@@ -116,13 +116,66 @@
 							<show_in_store>1</show_in_store>
 						</verify>
 					</fields>
-				</general>
-	
+				</general>	
+				<accounts_create translate="label">
+					<label>Automatic Account Creation</label>
+					<comment><![CDATA[<p><strong>Automatically creates new customer accounts for SSO users that do not have an account in this shop yet and logs the users in with these accounts.</p></strong>]]></comment>
+					<frontend_type>text</frontend_type>
+					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
+					<sort_order>5</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>					
+						<automatic>
+							<label>Automatically Create Accounts?</label>
+							<frontend_type>select</frontend_type>
+							<source_model>oneall_singlesignon/autocreateaccounts</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</automatic>		
+					</fields>
+				</accounts_create>		
+				<accounts_link translate="label">
+					<label>Automatic Account Link</label>
+					<comment><![CDATA[<p><strong>Tries to automatically link SSO users to already existing customer accounts. To link accounts the email address of the SSO session is matched against the email addresses of the existing customers.</strong></p><p>If the extension finds an existing account but cannot link the SSO user to it (eg. if the option is disabled), it will instead display a notice reminding the user of his account on the login/registration page.</p>]]></comment>
+					<frontend_type>text</frontend_type>
+					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
+					<sort_order>5</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>					
+						<automatic>
+							<label>Automatically Link Accounts?</label>
+							<frontend_type>select</frontend_type>
+							<source_model>oneall_singlesignon/autolinkaccounts</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</automatic>		
+						<unverified>
+							<label>Link Using Unverified Emails?</label>
+							<comment><![CDATA[<strong>Attention!</strong> For security reasons, we advise against using unverified email addresses to link accounts.]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>oneall_singlesignon/autolinkunverified</source_model>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</unverified>
+					</fields>
+				</accounts_link>		
 				<settings translate="label">
 					<label>SSO Session Settings</label>
 					<frontend_type>text</frontend_type>
 					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
-					<sort_order>5</sort_order>
+					<sort_order>6</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -158,7 +211,7 @@
 							<show_in_store>1</show_in_store>
 						</sessionsubrealm>	
 					</fields>
-				</settings>
+				</settings>								
 			</groups>
 		</oneall_singlesignon>
 	</sections>

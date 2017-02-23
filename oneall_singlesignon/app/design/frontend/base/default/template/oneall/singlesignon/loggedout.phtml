@@ -40,37 +40,72 @@ if (!function_exists ('oneall_singlesignon_run_loggedout'))
 			// Nothing has been done
 			switch (strtolower ($status->action))
 			{
-				// User found and logged in
-				case 'existing_user_login':
+				// //////////////////////////////////////////////////////////////////////////
+				// No user found and we cannot add users
+				// //////////////////////////////////////////////////////////////////////////
+				case 'new_user_no_login_autocreate_off' :			
 							
+					// Add Log
+					Mage::helper ('oneall_singlesignon')->add_log ('[SSO: run_loggedout] New user detected but account creation is disabled');
+					
+					// This value prevents SSO from re-trying to login the user.
+					Mage::getSingleton ('core/session')->setSSOGracePeriod (time () + 3600);
+				
+				break;
+				
+				// //////////////////////////////////////////////////////////////////////////
+				// User found and logged in
+				// //////////////////////////////////////////////////////////////////////////
+				
+				// Logged in using the user_token
+				case 'existing_user_login_user_token' :
+					
+					// Add Log
+					Mage::helper ('oneall_singlesignon')->add_log ('[SSO: run_loggedout] Existing user recognized by user_token ['.$status->user_token.']');
+				
+				// Logged in using a verified email address
+				case 'existing_user_login_email_verified' :
+				
+				// Logged in using an un-verified email address
+				case 'existing_user_login_email_unverified' :
+					
 					// Remove these
 					Mage::getSingleton ('core/session')->unsSSOEmail ();
 					Mage::getSingleton ('core/session')->unsSSOGracePeriod ();
-						
+				
 				break;
 				
+				// //////////////////////////////////////////////////////////////////////////
 				// User found, but we cannot log him in
-				case 'existing_user_not_verified':
+				// //////////////////////////////////////////////////////////////////////////
+				
+				// Customer found, but autolink disabled
+				case 'existing_user_no_login_autolink_off' :
+				
+				// Customer found, but autolink disabled for unverified emails
+				case 'existing_user_no_login_autolink_off_unverified_emails' :
 					
 					// This value prevents SSO from re-trying to login the user.
-					Mage::getSingleton('core/session')->setSSOGracePeriod (time()+3600);
+					Mage::getSingleton ('core/session')->setSSOGracePeriod (time () + 3600);
 					
 					// This value is a hint for the user, used in OneAll_SingleSignOn_Model_Observer
-					Mage::getSingleton('core/session')->setSSOEmail ($status->customer->getEmail());
-										
+					Mage::getSingleton ('core/session')->setSSOEmail ($status->customer->getEmail ());
+					
 					// Login Page URL
-					$login_page_url = Mage::getUrl('customer/account/login');
+					$login_page_url = Mage::getUrl ('customer/account/login');
 					
 					// Redirect
-					Mage::app()->getFrontController()->getResponse()->setRedirect($login_page_url);
-					
-				break;
-
-				// Default
-				default:
+					Mage::app ()->getFrontController ()->getResponse ()->setRedirect ($login_page_url);
 				
+				break;
+				
+				// //////////////////////////////////////////////////////////////////////////
+				// Default
+				// //////////////////////////////////////////////////////////////////////////
+				default :
+					
 					// Read data
-					$sso_grace_period = intval (Mage::getSingleton('core/session')->getSSOGracePeriod());
+					$sso_grace_period = intval (Mage::getSingleton ('core/session')->getSSOGracePeriod ());
 					
 					// If this value is in the future, we should not try to login the user with SSO
 					if ($sso_grace_period < time ())
@@ -90,18 +125,17 @@ if (!function_exists ('oneall_singlesignon_run_loggedout'))
 						$data [] = " }})();";
 						$data [] = " var _oneall = (_oneall || []);";
 						$data [] = " _oneall.push(['single_sign_on', 'set_callback_uri', window.location.href]);";
-						$data [] = " _oneall.push(['single_sign_on', 'do_check_for_sso_session']);";				
+						$data [] = " _oneall.push(['single_sign_on', 'do_check_for_sso_session']);";
 						$data [] = "//]]>";
 						$data [] = "</script>";
 						$data [] = "";
-			
+						
 						// Add SSO JavaScript
 						echo implode ("\n", $data);
 					}
-					
+				
 				break;
 			}
-
 		}
 	}
 }
