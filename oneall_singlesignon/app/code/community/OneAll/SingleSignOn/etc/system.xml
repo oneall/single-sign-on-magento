@@ -27,6 +27,7 @@
 				</documentation>
 				<connection translate="label">
 					<label>API Connection Handler</label>
+					<comment><![CDATA[<p><strong>For security reasons we recommend using PHP CURL and HTTPS on port 443.</strong></p>]]></comment>
 					<frontend_type>Radios</frontend_type>
 					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
 					<sort_order>2</sort_order>
@@ -69,7 +70,7 @@
 				</connection>
 				<general translate="label">
 					<label>API Settings</label>
-					<comment><![CDATA[<p><strong>You can create and view your API Credentials in your <a href="https://app.oneall.com/signin/" target="_blank">OneAll account</a>.</strong></p><p>Please make sure to use the same settings in all the shops that you want to link together using SSO.</p>]]></comment>
+					<comment><![CDATA[<p><strong>You can create and view your API Credentials in your <a href="https://app.oneall.com/signin/" target="_blank">OneAll account</a>.</strong></p><p><strong>Please make sure to use the same settings in all the shops that you want to link together using SSO.</strong></p>]]></comment>
 					<frontend_type>text</frontend_type>
 					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
 					<sort_order>3</sort_order>
@@ -129,7 +130,7 @@
 					<expanded>1</expanded>
 					<fields>					
 						<automatic>
-							<label>Automatically Create Accounts?</label>
+							<label>Automatically create accounts?</label>
 							<frontend_type>select</frontend_type>
 							<source_model>oneall_singlesignon/autocreateaccounts</source_model>
 							<sort_order>1</sort_order>
@@ -137,11 +138,20 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</automatic>		
+						<sendmail>
+							<label>Send email to new customers?</label>
+							<frontend_type>select</frontend_type>
+							<source_model>oneall_singlesignon/autocreatesendmail</source_model>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</sendmail>
 					</fields>
 				</accounts_create>		
 				<accounts_link translate="label">
 					<label>Automatic Account Link</label>
-					<comment><![CDATA[<p><strong>Tries to automatically link SSO users to already existing customer accounts. To link accounts the email address of the SSO session is matched against the email addresses of the existing customers.</strong></p><p>If the extension finds an existing account but cannot link the SSO user to it (eg. if the option is disabled), it will instead display a notice reminding the user of his account on the login/registration page.</p>]]></comment>
+					<comment><![CDATA[<p><strong>Tries to automatically link SSO users to already existing customer accounts. To link accounts the email address of the SSO session is matched against the email addresses of the existing customers.</strong></p><p><strong>If the extension finds an existing account but cannot link the SSO user to it (eg. if the option is disabled), a notice reminding the user of his existing account will be displayed on the login/registration page instead.</strong></p>]]></comment>
 					<frontend_type>text</frontend_type>
 					<frontend_model>oneall_singlesignon/adminhtml_system_config_fieldset_general</frontend_model>
 					<sort_order>5</sort_order>
@@ -151,7 +161,7 @@
 					<expanded>1</expanded>
 					<fields>					
 						<automatic>
-							<label>Automatically Link Accounts?</label>
+							<label>Automatically link accounts?</label>
 							<frontend_type>select</frontend_type>
 							<source_model>oneall_singlesignon/autolinkaccounts</source_model>
 							<sort_order>1</sort_order>
@@ -160,7 +170,7 @@
 							<show_in_store>1</show_in_store>
 						</automatic>		
 						<unverified>
-							<label>Link Using Unverified Emails?</label>
+							<label>Link using unverified emails?</label>
 							<comment><![CDATA[<strong>Attention!</strong> For security reasons, we advise against using unverified email addresses to link accounts.]]></comment>
 							<frontend_type>select</frontend_type>
 							<source_model>oneall_singlesignon/autolinkunverified</source_model>

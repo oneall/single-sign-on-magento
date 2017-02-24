@@ -219,7 +219,7 @@ class OneAll_SingleSignOn_Model_Observer
 		}
 	}
 	
-	// Fired when a customer logs in.
+	// Fired after a customer has logged in.
 	public function customer_after_login ($observer)
 	{
 		// Load Customer.
@@ -237,8 +237,8 @@ class OneAll_SingleSignOn_Model_Observer
 		}
 	}
 	
-	// Fired when the customer logs out.
-	public function customer_logout ($observer)
+	// Fired after a customer has logged out.
+	public function customer_after_logout ($observer)
 	{
 		// Load Customer.
 		$customer = $observer->getCustomer ();
@@ -248,7 +248,7 @@ class OneAll_SingleSignOn_Model_Observer
 		if (!empty ($customer_id))
 		{
 			// Add Log
-			Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_logout] Removing session for customer ['.$customer->getId().']');
+			Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_after_logout] Removing session for customer ['.$customer->getId().']');
 			
 			// Remove the SSO session of this customer.
 			Mage::helper ('oneall_singlesignon')->remove_session_for_customer ($customer);

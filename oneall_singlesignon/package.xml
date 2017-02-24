@@ -6,13 +6,11 @@
 	<license>GNU/GPL 2 or later</license>
 	<channel>community</channel>
 	<extends />
-	<summary>Social Login allows your customers to login and register with
-		30+ Social Networks.</summary>
-	<description>Social Login for Magento is a professional extension that
-		allows your visitors to login and register with social networks like
-		for example Twitter, Facebook, LinkedIn and PayPal.
-		It increases your conversion rate and sales by simplifying the registration
-		process and provides permission-based user data retrieved from the social network profiles.
+	<summary>Single Sign-On automatically signs users in as they browse between multiple and independent Magento shops in your network.</summary>
+	<description>
+		Single Sign On for Magento is a professional extension that automatically signs users in as they browse between multiple and independent 
+		Magento shops in your network. Take away the need for your users to re-enter their authentication credentials when they switch from one 
+		of your shops to another. 100% compliant with all European and U.S. data protection laws.
 	</description>
 	<notes>A documentation is available here: http://docs.oneall.com/plugins/guide/social-login-magento/</notes>
 	<authors>
@@ -22,7 +20,7 @@
 			<email>support@oneall.com</email>
 		</author>
 	</authors>
-	<date>2014-12-16</date>
+	<date>2017-02-15</date>
 	<time>10:48:42</time>
 	<contents>
 		<target name="magecommunity">
@@ -48,6 +46,7 @@
 						<file name="Apiconnectionport.php" hash="4120ddc8b175d91f2d3cb0a57488876b" />
 						<file name="Apiverify.php" hash="98a6d6a98e096ab53cadd4cc30656de2" />
 						<file name="Autocreateaccounts.php" hash="12aaa6a98e096ab53cadd4cc30656de2" />
+						<file name="Autocreatesendmail.php" hash="12abb7798e096ab53cadd4cc30656de2" />
 						<file name="Autolinkaccounts.php" hash="12aa2aa456096ab53cadd4cc30656de2" />
 						<file name="Autolinkunverified.php" hash="ab122aa456096ab53cadd4cc30656de2" />
 						<file name="Session.php" hash="1f8fe3c8c52aa1a7d91e241aab5dc202" />

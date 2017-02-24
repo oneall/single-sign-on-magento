@@ -24,8 +24,7 @@
 		</layout>
 	</frontend>	
 	<global>
-		<events>
-		
+		<events>		
 			<controller_action_predispatch_customer_account_loginpost>
 				<observers>
 					<OneAll_SingleSignOn_Model_Observer>
@@ -34,8 +33,7 @@
 						<method>customer_before_login</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 				</observers>
-			</controller_action_predispatch_customer_account_loginpost>
-		
+			</controller_action_predispatch_customer_account_loginpost>		
 			<customer_login>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -44,8 +42,7 @@
 						<method>customer_after_login</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
-			</customer_login>
-			
+			</customer_login>			
 			<controller_action_predispatch_customer_account_editpost>
 				<observers>
 					<OneAll_SingleSignOn_Model_Observer>
@@ -54,8 +51,7 @@
 						<method>customer_before_update_account</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 				</observers>
-			</controller_action_predispatch_customer_account_editpost>
-		
+			</controller_action_predispatch_customer_account_editpost>		
 			<controller_action_layout_load_before>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -64,8 +60,7 @@
 						<method>layout_load_before</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
-			</controller_action_layout_load_before>
-			
+			</controller_action_layout_load_before>			
 			<customer_save_after>			
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -74,8 +69,7 @@
 						<method>customer_save_after</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
-			</customer_save_after>
-			
+			</customer_save_after>			
 			<customer_register_success>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
@@ -84,20 +78,16 @@
 						<method>customer_register</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
-			</customer_register_success>
-						
-	
-			
+			</customer_register_success>			
 			<customer_logout>
 				<observers>
 		 			<OneAll_SingleSignOn_Model_Observer>
 		 				<type>singleton</type>
 						<class>OneAll_SingleSignOn_Model_Observer</class>	
-						<method>customer_logout</method>									
+						<method>customer_after_logout</method>									
 		 			</OneAll_SingleSignOn_Model_Observer>
 		 		</observers>
 			</customer_logout>
-			
 		</events>		
 		<blocks>
 			<oneall_singlesignon>
@@ -160,6 +150,7 @@
 			</settings>
 			<accounts_create>
 				<automatic>1</automatic>
+				<sendmail>0</sendmail>
 			</accounts_create>
 			<accounts_link>
 				<automatic>1</automatic>

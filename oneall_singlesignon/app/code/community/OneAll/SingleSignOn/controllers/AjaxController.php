@@ -72,22 +72,22 @@ class OneAll_SingleSignOn_AjaxController extends Mage_Core_Controller_Front_Acti
 	// Verify API Settings
 	public function verifyAction ()
 	{
-		// API Credentials
+		// API Credentials.
 		$api_subdomain = trim (Mage::app ()->getRequest ()->getParam ('api_subdomain'));
 		$api_key = trim (Mage::app ()->getRequest ()->getParam ('api_key'));
 		$api_secret = trim (Mage::app ()->getRequest ()->getParam ('api_secret'));
 
-		// API Handler
+		// API Connection Handler.
 		$api_connection_handler = (trim (Mage::app ()->getRequest ()->getParam ('api_connection_handler')) == 'fsockopen' ? 'fsockopen' : 'curl');
 		$api_connection_port = (trim (Mage::app ()->getRequest ()->getParam ('api_connection_port')) == '80' ? 80 : 443);
 
-		// Fields missing
+		// Fields missing.
 		if (empty ($api_subdomain) or empty ($api_key) or empty ($api_secret))
 		{
 			die ('error_not_all_fields_filled_out');
 		}
 
-		// Full domain entered
+		// Full domain entered.
 		if (preg_match ("/([a-z0-9\-]+)\.api\.oneall\.com/i", $api_subdomain, $matches))
 		{
 			$api_subdomain = $matches [1];
