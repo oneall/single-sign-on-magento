@@ -88,7 +88,7 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 		if (text == 'success_autodetect_api_curl_https')
 		{
 			is_success = true;
-			result_container.innerHTML =  '<b style="color:#3d6611">Detected CURL on Port 443 !</b>';
+			result_container.innerHTML =  '<strong style="color:#3d6611">Detected CURL on port 443/HTTPS</strong>';
 			handler.value = 'curl';
 			port.value = '443';
 		}
@@ -96,7 +96,7 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 		else if (text == 'success_autodetect_api_curl_http')
 		{
 			is_success = true;
-			result_container.innerHTML =  '<b style="color:#3d6611">Detected CURL on Port 80 !</b>';
+			result_container.innerHTML =  '<strong style="color:#3d6611">Detected CURL on port 80/HTTP</strong>';
 			handler.value = 'curl';
 			port.value = '80';
 		}
@@ -104,14 +104,14 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 		else if (text == 'error_autodetect_api_curl_ports_blocked')
 		{
 			is_success = false;
-			result_container.innerHTML =  '<b style="color:red">Detected CURL but both ports are blocked!</b>';
+			result_container.innerHTML =  '<strong style="color:#eb5e00">Detected CURL but both ports 80/443 are blocked</strong>';
 			handler.value = 'curl'
 		}
 		/* FSOCKOPEN detected, HTTPS */
 		else if (text == 'success_autodetect_api_fsockopen_https')
 		{
 			is_success = true;
-			result_container.innerHTML =  '<b style="color:#3d6611">Detected FSOCKOPEN on Port 443!</b>';
+			result_container.innerHTML =  '<strong style="color:#3d6611">Detected FSOCKOPEN on port 443/HTTPS</strong>';
 			handler.value = 'fsockopen';
 			port.value = '80';
 		}
@@ -119,7 +119,7 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 		else if (text == 'success_autodetect_api_fsockopen_http')
 		{
 			is_success = true;
-			result_container.innerHTML =  '<b style="color:#3d6611">Detected FSOCKOPEN on Port 80!</b>';
+			result_container.innerHTML =  '<strong style="color:#3d6611">Detected FSOCKOPEN on port 80/HTTP</strong>';
 			handler.value = 'fsockopen';
 			port.value = '80';
 		}
@@ -127,14 +127,14 @@ class OneAll_SingleSignOn_Model_Apiautodetect
 		else if (text == 'error_autodetect_api_fsockopen_ports_blocked')
 		{
 			is_success = false;
-			result_container.innerHTML =  '<b style="color:red">Detected FSOCKOPEN  but both ports are blocked!</b>';
+			result_container.innerHTML =  '<strong style="color:#eb5e00">Detected FSOCKOPEN but both ports 80/443 are blocked</strong>';
 			handler.value = 'fsockopen';
 		}
 		/* No handler detected */
 		else
 		{
 			is_success = false;
-			result_container.innerHTML =  '<b style="color:red">No  connection handler detected!</b>';
+			result_container.innerHTML =  '<strong style="color:#eb5e00">No connection handler detected</strong>';
 		}
    	}
 

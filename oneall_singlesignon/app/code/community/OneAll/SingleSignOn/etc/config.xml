@@ -153,7 +153,7 @@
 				<sendmail>0</sendmail>
 			</accounts_create>
 			<accounts_link>
-				<automatic>1</automatic>
+				<automatic>0</automatic>
 				<unverified>0</unverified>
 			</accounts_link>
 		</oneall_singlesignon>

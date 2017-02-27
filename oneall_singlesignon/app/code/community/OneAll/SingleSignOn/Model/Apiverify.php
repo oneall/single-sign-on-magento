@@ -80,7 +80,7 @@ class OneAll_SingleSignOn_Model_Apiverify
 		api_subdomain = document.getElementById('oneall_singlesignon_general_subdomain').value;
 
 		var result_container = document.getElementById('oneall_singlesignon_api_verify_result');
-		result_container.innerHTML = 'Loading ...';
+		result_container.innerHTML = '<strong>Loading ...</strong>';
 		verify_ajax('{$base_url}oneall_singlesignon_ajax/ajax/verify?api_key=' + api_key + '&api_subdomain=' + api_subdomain + '&api_secret='+  api_secret  +'&api_connection_handler='+  api_connection_handler +'&api_connection_port=' + api_connection_port, verify_complete);
 	}
 
@@ -92,32 +92,41 @@ class OneAll_SingleSignOn_Model_Apiverify
 
 		if (text == 'error_selected_handler_faulty')
 		{
-			result_container.innerHTML = '<b style="color:red">The connection handler does not work!</b>';
+			result_container.innerHTML = '<strong style="color:#eb5e00">The connection handler does not work!</strong>';
 		}
 		else if (text == 'error_not_all_fields_filled_out')
 		{
-			result_container.innerHTML = '<b style="color:red">Please fill out each of the fields above.</b>';
+			result_container.innerHTML = '<strong style="color:#eb5e00">Please fill out each of the fields above.</strong>';
 		}
 		else if (text == 'error_subdomain_wrong')
 		{
-				result_container.innerHTML = '<b style="color:red">The API subdomain does not seem to exist!</b>';
+				result_container.innerHTML = '<strong style="color:#eb5e00">The API subdomain does not seem to exist!</strong>';
 		}
 		else if (text == 'error_subdomain_wrong_syntax')
 		{
-			result_container.innerHTML = '<b style="color:red">The API subdomain does not seem to exist!</b>';
+			result_container.innerHTML = '<strong style="color:#eb5e00">The API subdomain does not seem to exist!</strong>';
 		}
 		else if (text == 'error_communication')
 		{
-			result_container.innerHTML = '<b style="color:red">Could not establish a communication with OneAll.';
+			result_container.innerHTML = '<strong style="color:#eb5e00">Could not establish a communication with OneAll.</strong>';
 		}
 		else if (text == 'error_authentication_credentials_wrong')
 		{
-			result_container.innerHTML = '<b style="color:red">The API keys are invalid!</b>';
+			result_container.innerHTML = '<strong style="color:#eb5e00">The API keys are invalid!</strong>';
+		}
+		else if (text == 'error_plan_has_no_single_signon')
+		{
+			result_container.innerHTML = '<strong style="color:#eb5e00">Single Sign-On is not available for this OneAll site. Please login to your OneAll account and upgrade the site to a higher plan in order to enable it.</strong>';	
+		}
+		else if (text == 'success')
+		{
+			result_container.innerHTML = '<strong style="color:#3d6611">Success! The API settings are correct!</strong>';
 		}
 		else
 		{
-			result_container.innerHTML = '<b style="color:#3d6611">The API settings are correct !</b>';
+			result_container.innerHTML = '<strong style="color:#eb5e00">Unknown result received</strong>';		
 		}
+				
 	}
 </script>
 <div id="oneall_singlesignon_api_verify_result"></div>
