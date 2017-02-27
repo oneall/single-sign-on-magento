@@ -70,7 +70,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		$settings ['session_sub_realm'] = (empty ($settings ['session_top_realm']) ? '' : trim (strval (Mage::getStoreConfig ('oneall_singlesignon/settings/sessionsubrealm'))));
 	
 		// Helper Settings.
-		$settings ['base_url'] = ($settings ['subdomain'] . '.api.oneall.loc');
+		$settings ['base_url'] = ($settings ['subdomain'] . '.api.oneall.com');
 		$settings ['api_url'] = ($settings ['connection_protocol'] . '://' . $settings ['base_url']);
 	
 		// Done

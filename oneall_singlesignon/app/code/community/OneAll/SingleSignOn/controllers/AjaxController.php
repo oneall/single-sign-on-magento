@@ -104,7 +104,7 @@ class OneAll_SingleSignOn_AjaxController extends Mage_Core_Controller_Front_Acti
 		}
 		
 		// Domain
-		$ext_settings ['base_url'] = ($ext_settings ['subdomain'] . '.api.oneall.loc');
+		$ext_settings ['base_url'] = ($ext_settings ['subdomain'] . '.api.oneall.com');
 		$ext_settings ['api_url'] = ($ext_settings ['connection_protocol'] . '://' . $ext_settings ['base_url']);
 		
 		// API Endpoint
