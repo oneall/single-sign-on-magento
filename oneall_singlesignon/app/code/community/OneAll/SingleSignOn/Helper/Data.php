@@ -44,39 +44,39 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 	public function get_settings ()
 	{
 		$settings = array();
-	
+		
 		// API Connection Handler.
 		$settings ['connection_handler'] = (Mage::getStoreConfig ('oneall_singlesignon/connection/handler') == 'fsockopen' ? 'fsockopen' : 'curl');
 		$settings ['connection_port'] = (Mage::getStoreConfig ('oneall_singlesignon/connection/port') == 80 ? 80 : 443);
 		$settings ['connection_protocol'] = ($settings ['connection_port'] == 80 ? 'http' : 'https');
-	
+		
 		// API Settings.
 		$settings ['subdomain'] = trim (strval (Mage::getStoreConfig ('oneall_singlesignon/general/subdomain')));
 		$settings ['key'] = trim (strval (Mage::getStoreConfig ('oneall_singlesignon/general/key')));
 		$settings ['secret'] = trim (strval (Mage::getStoreConfig ('oneall_singlesignon/general/secret')));
-	
+		
 		// Automatic Account Creation.
 		$settings ['accounts_autocreate'] = (Mage::getStoreConfig ('oneall_singlesignon/accounts_create/automatic') == 0 ? false : true);
 		$settings ['accounts_sendmail'] = (Mage::getStoreConfig ('oneall_singlesignon/accounts_create/sendmail') == 1 ? true : false);
-	
+		
 		// Automatic Account Link.
 		$settings ['accounts_autolink'] = (Mage::getStoreConfig ('oneall_singlesignon/accounts_link/automatic') == 0 ? false : true);
 		$settings ['accounts_linkunverified'] = (Mage::getStoreConfig ('oneall_singlesignon/accounts_link/unverified') == 1 ? true : false);
-	
+		
 		// SSO Session Settings.
 		$settings ['session_lifetime'] = trim (strval (Mage::getStoreConfig ('oneall_singlesignon/settings/sessionlifetime')));
 		$settings ['session_lifetime'] = ((empty ($settings ['session_lifetime']) || $settings ['session_lifetime'] < 0) ? 86400 : $settings ['session_lifetime']);
 		$settings ['session_top_realm'] = trim (strval (Mage::getStoreConfig ('oneall_singlesignon/settings/sessiontoprealm')));
 		$settings ['session_sub_realm'] = (empty ($settings ['session_top_realm']) ? '' : trim (strval (Mage::getStoreConfig ('oneall_singlesignon/settings/sessionsubrealm'))));
-	
+		
 		// Helper Settings.
 		$settings ['base_url'] = ($settings ['subdomain'] . '.api.oneall.com');
 		$settings ['api_url'] = ($settings ['connection_protocol'] . '://' . $settings ['base_url']);
-	
+		
 		// Done
 		return $settings;
 	}
-	
+
 	/**
 	 * Generate a random email address.
 	 */
@@ -107,11 +107,11 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 	{
 		// Read settings.
 		$ext_settings = $this->get_settings ();
-			
+		
 		// We cannot make a connection without the subdomain.
-		if ( ! empty ($ext_settings ['key']) && !empty ($ext_settings ['subdomain']))
+		if (!empty ($ext_settings ['key']) && !empty ($ext_settings ['subdomain']))
 		{
-			return  sha1 ($ext_settings ['key'] . $password . $ext_settings ['subdomain']); 
+			return sha1 ($ext_settings ['key'] . $password . $ext_settings ['subdomain']);
 		}
 		
 		// Error
@@ -127,35 +127,35 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		$status = new stdClass ();
 		$status->action = null;
 		$status->is_successfull = false;
-	
+		
 		// We need the identity_token to remove the session.
 		if (!empty ($identity_token))
 		{
 			// Read settings.
 			$ext_settings = $this->get_settings ();
-				
+			
 			// We cannot make a connection without the subdomain.
 			if (!empty ($ext_settings ['subdomain']))
 			{
 				// API Endpoint: http://docs.oneall.com/api/resources/sso/identity/destroy-session/
 				$api_resource_url = $ext_settings ['api_url'] . '/sso/sessions/identities/' . $identity_token . '.json?confirm_deletion=true';
-	
+				
 				// API Options
 				$api_options = array(
 					'api_key' => $ext_settings ['key'],
-					'api_secret' => $ext_settings ['secret']
+					'api_secret' => $ext_settings ['secret'] 
 				);
-	
+				
 				// Delete Session.
 				$result = $this->do_api_request ($ext_settings ['connection_handler'], $api_resource_url, 'DELETE', $api_options);
-	
+				
 				// Check result.
 				if (is_object ($result) && property_exists ($result, 'http_code') && $result->http_code == 200)
 				{
 					// Success
 					$status->action = 'session_deleted';
 					$status->is_successfull = true;
-	
+					
 					// Add Log
 					$this->add_log ('Session for identity_token [' . $identity_token . '] deleted');
 				}
@@ -166,11 +166,11 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 				$status->action = 'extension_not_setup';
 			}
 		}
-	
+		
 		// Done
 		return $status;
 	}
-	
+
 	/**
 	 * Remove a Single Sign-On session for the given sso_session_token.
 	 */
@@ -205,15 +205,15 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 				// Check result.
 				if (is_object ($result) && property_exists ($result, 'http_code') && $result->http_code == 200)
 				{
-					// Success
+					// Update status.
 					$status->action = 'session_deleted';
 					$status->is_successfull = true;
-				
+					
 					// Add Log
-					$this->add_log ('Session for sso_session-token [' . $sso_session_token . '] deleted');
+					$this->add_log ('[REMOVE SESSION] Session for sso_session-token [' . $sso_session_token . '] deleted');
 				}
 			}
-			// Extension not setup
+			// Extension not setup.
 			else
 			{
 				$status->action = 'extension_not_setup';
@@ -282,7 +282,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						$status->is_successfull = true;
 						
 						// Add Log
-						$this->add_log ('[START SESSION] Session [' . $status->sso_session_token . '] started for identity [' . $identity_token . ']');
+						$this->add_log ('[START SESSION] Session [' . $status->sso_session_token . '] for identity [' . $identity_token . '] started');
 					}
 				}
 			}
@@ -325,7 +325,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 				)) 
 			);
 			
-			// User Update
+			// User Update.
 			$result = $this->do_api_request ($ext_settings ['connection_handler'], $api_resource_url, 'POST', $api_options);
 		}
 	}
@@ -376,9 +376,9 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 					// Update status.
 					$status->action = 'customer_cloud_storage_password_updated';
 					$status->password_updated = true;
-						
+					
 					// Add Log
-					$this->add_log ('Password for customer [' . $customer->getId () . '] updated in cloud storage');					
+					$this->add_log ('Password for customer [' . $customer->getId () . '] updated in cloud storage');
 				}
 			}
 			// No cloud storage user
@@ -429,7 +429,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						'request' => array(
 							'user' => array(
 								'user_token' => $tokens->user_token,
-								'password' => $this->hash_password ($password), 
+								'password' => $this->hash_password ($password) 
 							) 
 						) 
 					)) 
@@ -671,7 +671,10 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 			$customer_addresses = array();
 			
 			// Customer Address
-			foreach (array('billing', 'shipping') as $type)
+			foreach (array(
+				'billing',
+				'shipping' 
+			) as $type)
 			{
 				$getter = 'getPrimary' . ucfirst (strtolower ($type)) . 'Address';
 				$address = $customer->$getter ();
@@ -719,7 +722,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 					) 
 				)) 
 			);
-									
+			
 			// Add User.
 			$result = $this->do_api_request ($ext_settings ['connection_handler'], $api_resource_url, 'POST', $api_options);
 			
@@ -776,7 +779,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 			
 			// Remove session from cloud (This one should not be necessary as already covered above)
 			// $remove_session = $this->api_remove_session_for_sso_session_token ($sso_session_token);
-						
+			
 			// Success.
 			$status->is_successfull = true;
 		}
@@ -797,11 +800,27 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		// Verify customer object.
 		if (is_object ($customer) && $customer->getId ())
 		{
-			// Save customer's tokens.
+			// Load customer's tokens.
 			$model = Mage::getModel ('oneall_singlesignon/user')->load ($customer->getId (), 'customer_id');
-			$model->setData ('customer_id', $customer->getId ());
+			$customer_id = $model->getData ('customer_id');
+			
+			// New Entry.
+			if (empty ($customer_id))
+			{
+				$model->setData ('customer_id', $customer->getId ());
+				$model->setData ('added_at', Mage::getSingleton ('core/date')->gmtDate ());
+			}
+			// Existing Entry.
+			else
+			{
+				$model->setData ('modified_at', Mage::getSingleton ('core/date')->gmtDate ());
+			}
+			
+			// Setup Tokens.
 			$model->setData ('user_token', $user_token);
 			$model->setData ('identity_token', $identity_token);
+			
+			// Save.
 			$model->save ();
 			
 			// Update Status.
@@ -852,7 +871,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		// Result Container
 		$status = new stdClass ();
 		$status->is_successfull = false;
-	
+		
 		// Read customer's tokens.
 		$tokens = Mage::helper ('oneall_singlesignon')->get_local_storage_tokens_for_customer ($customer);
 		
@@ -873,7 +892,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 				$status->user_token = $add_customer->user_token;
 				
 				// Add Log.
-				$this->add_log ('[CREATE SESSION] Tokens for customer [' . $customer->getId () . '] created: user_token ['.$status->user_token.'], identity_token ['.$status->identity_token.']');
+				$this->add_log ('[CREATE SESSION] Tokens for customer [' . $customer->getId () . '] created: user_token [' . $status->user_token . '], identity_token [' . $status->identity_token . ']');
 				
 				// Add to database.
 				$add_tokens = Mage::helper ('oneall_singlesignon')->add_local_storage_tokens_for_customer ($customer, $status->user_token, $status->identity_token);
@@ -887,15 +906,15 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 			$status->user_token = $tokens->user_token;
 			
 			// Add Log.
-			$this->add_log ('[CREATE SESSION] Customer [' . $customer->getId () . '] has already tokens: user_token ['.$status->user_token.'], identity_token ['.$status->identity_token.']');
+			$this->add_log ('[CREATE SESSION] Customer [' . $customer->getId () . '] has already tokens: user_token [' . $status->user_token . '], identity_token [' . $status->identity_token . ']');
 		}
 		
 		// Start Session
-		if ( ! empty ($status->identity_token))
+		if (!empty ($status->identity_token))
 		{
 			// Add Log.
-			$this->add_log ('[CREATE SESSION] Starting session for customer [' . $customer->getId () . '] with identity_token ['.$status->identity_token.']');
-						
+			$this->add_log ('[CREATE SESSION] Starting session for customer [' . $customer->getId () . '] with identity_token [' . $status->identity_token . ']');
+			
 			// Start a new session.
 			$start_session = $this->api_start_session_for_identity_token ($status->identity_token);
 			
@@ -907,14 +926,30 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 				$status->is_successfull = true;
 				
 				// Add Log.
-				$this->add_log ('[CREATE SESSION] Session ['.$status->sso_session_token .'] for customer [' . $customer->getId () . '] started');
+				$this->add_log ('[CREATE SESSION] Session [' . $status->sso_session_token . '] for customer [' . $customer->getId () . '] created');
 				
 				// Create or update session data.
-				$session = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId (), 'customer_id');
-				$session->setData ('customer_id', $customer->getId ());
-				$session->setData ('sso_session_token', $status->sso_session_token );
-				$session->setData ('identity_token', $status->identity_token);
-				$session->save ();
+				$model = Mage::getModel ('oneall_singlesignon/session')->load ($customer->getId (), 'customer_id');
+				$customer_id = $model->getData ('customer_id');
+				
+				// New Entry.
+				if (empty ($customer_id))
+				{
+					$model->setData ('customer_id', $customer->getId ());
+					$model->setData ('added_at', Mage::getSingleton ('core/date')->gmtDate ());
+				}
+				// Existing Entry.
+				else
+				{
+					$model->setData ('modified_at', Mage::getSingleton ('core/date')->gmtDate ());
+				}
+				
+				// Set Data.
+				$model->setData ('sso_session_token', $status->sso_session_token);
+				$model->setData ('identity_token', $status->identity_token);
+				
+				// Create/Update.
+				$model->save ();
 			}
 		}
 		
@@ -1026,7 +1061,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						}
 						
 						// Add Log.
-						$this->add_log ('[SSO Callback] No customer found for user_token [' . $user_token . ']. Trying email lookup.');						
+						$this->add_log ('[SSO Callback] No customer found for user_token [' . $user_token . ']. Trying email lookup.');
 						
 						// Retrieve email from identity.
 						if (isset ($data->user->identity->emails) && is_array ($data->user->identity->emails) && count ($data->user->identity->emails) > 0)
@@ -1131,7 +1166,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 							$email_is_random = true;
 							
 							// Add Log.
-							$this->add_log ('[SSO Callback] Email lookup failed, identity provides no email address. Random address ['.$email.'] generated.');
+							$this->add_log ('[SSO Callback] Email lookup failed, identity provides no email address. Random address [' . $email . '] generated.');
 						}
 						
 						// /////////////////////////////////////////////////////////////////////////
@@ -1237,7 +1272,10 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 						{
 							foreach ($data->user->identity->addresses as $address)
 							{
-								if (isset ($address->type) && in_array ($address->type, array('billing', 'shipping')))
+								if (isset ($address->type) && in_array ($address->type, array(
+									'billing',
+									'shipping' 
+								)))
 								{
 									try
 									{
@@ -1467,15 +1505,15 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		fwrite ($fp, "User-Agent: " . self::USER_AGENT . "\r\n");
 		
 		// Add POST data ?
-		if (isset ($options ['api_data']) && ! empty ($options ['api_data']))
+		if (isset ($options ['api_data']) && !empty ($options ['api_data']))
 		{
-			fwrite($fp, "Content-length: ". strlen($options ['api_data']) ."\r\n");
+			fwrite ($fp, "Content-length: " . strlen ($options ['api_data']) . "\r\n");
 		}
 		
 		// Enable basic authentication?
 		if (isset ($options ['api_key']) && isset ($options ['api_secret']))
 		{
-			fwrite ($fp, "Authorization: Basic " . base64_encode ($options ['api_key'] . ":" . $options ['api_secret'])."\r\n");
+			fwrite ($fp, "Authorization: Basic " . base64_encode ($options ['api_key'] . ":" . $options ['api_secret']) . "\r\n");
 		}
 		
 		// Close request.
@@ -1486,7 +1524,7 @@ class OneAll_SingleSignOn_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			fwrite ($fp, $options ['api_data']);
 		}
-				
+		
 		// Fetch response
 		$response = '';
 		while ( !feof ($fp) )

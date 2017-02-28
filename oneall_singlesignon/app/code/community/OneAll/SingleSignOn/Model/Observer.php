@@ -107,7 +107,7 @@ class OneAll_SingleSignOn_Model_Observer
 			if ($tokens->have_been_retrieved === true)
 			{
 				// Add Log
-				Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_before_update_account] Checking is password for customer ['.$customer->getId().'] must be updated');
+				Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_before_update_account] Checking if password for customer ['.$customer->getId().'] must be updated');
 				
 				// Is the entered password valid?
 				$password_is_valid = false;
@@ -134,7 +134,7 @@ class OneAll_SingleSignOn_Model_Observer
 						if ($password_curr == Mage::helper ('core')->getHash ($password_frm_current, $password_curr_salt))
 						{
 							// Add Log
-							Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_before_update_account] Valid local password entered for customer ['.$customer->getId().']');
+							Mage::helper ('oneall_singlesignon')->add_log ('[Observer: customer_before_update_account] Valid local password entered by customer ['.$customer->getId().']');
 								
 							// Password is valid
 							$password_is_valid = true;

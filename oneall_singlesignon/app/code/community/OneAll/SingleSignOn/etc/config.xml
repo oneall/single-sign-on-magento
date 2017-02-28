@@ -24,7 +24,8 @@
 		</layout>
 	</frontend>	
 	<global>
-		<events>		
+		<events>
+		
 			<controller_action_predispatch_customer_account_loginpost>
 				<observers>
 					<OneAll_SingleSignOn_Model_Observer>
@@ -153,7 +154,7 @@
 				<sendmail>0</sendmail>
 			</accounts_create>
 			<accounts_link>
-				<automatic>0</automatic>
+				<automatic>1</automatic>
 				<unverified>0</unverified>
 			</accounts_link>
 		</oneall_singlesignon>

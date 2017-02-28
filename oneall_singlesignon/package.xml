@@ -76,7 +76,7 @@
 					</dir>
 					<dir name="sql">
 						<dir name="oneall_singlesignon_setup">
-							<file name="resource-install-1.0.0.php" hash="123670ff053f5391e6626ac9dd22769b" />
+							<file name="mysql4-install-1.0.0.php" hash="1236e2ff053f5391e6626ac9dd22769b" />
 						</dir>
 					</dir>
 				</dir>

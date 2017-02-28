@@ -23,18 +23,38 @@
  *
  */
 
-// Start Installer
+// Start Installer.
 $installer = $this;
 $installer->startSetup ();
 
-// Table to store the customer's sso_session_token
-$sql = "CREATE TABLE `" . $this->getTable ('oneall_singlesignon/session') . "` (`customer_id` int(11) UNSIGNED NOT NULL, `sso_session_token` char(36) NOT NULL, PRIMARY KEY (`customer_id`)) ENGINE=InnoDB;";
-$installer->run ($sql);
+// Table to store the customer's sso_session_token.
+$installer->run ("
+		
+	CREATE TABLE `" . $this->getTable ('oneall_singlesignon/session') . "` (
+		`customer_id` int(11) UNSIGNED NOT NULL, 
+		`sso_session_token` char(36) NOT NULL, 
+		`added_at` datetime default NULL,
+		`modified_at` datetime default NULL,		
+		PRIMARY KEY (`customer_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='OneAll Single Sign-On Session';
+				
+");
 
 
-// Table to store the customer's identity_token
-$sql = "CREATE TABLE `" . $this->getTable ('oneall_singlesignon/identity') . "` (`identity_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `identity_token` char(36) NOT NULL, PRIMARY KEY (`customer_id`)) ENGINE=InnoDB;";
-$installer->run ($sql);
 
-// End Installer
+// Table to store the customer's user_token/identity_token.
+$installer->run ("
+
+	CREATE TABLE `" . $this->getTable ('oneall_singlesignon/user') . "` (
+		`customer_id` int(11) UNSIGNED NOT NULL, 	
+		`user_token` char(36) NOT NULL,
+		`identity_token` char(36) NOT NULL,
+		`added_at` datetime default NULL,
+		`modified_at` datetime default NULL,
+		PRIMARY KEY (`customer_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='OneAll Single Sign-On Users';
+		
+");
+
+// End Installer.
 $installer->endSetup ();
